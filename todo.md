@@ -17,6 +17,17 @@ Tuesday, Dec 3
 - Added the database initilization in index.js
 - Created function that grabs all reviews, puts in array
 - Added home "/" route that renders reviews on index.ejs
+- Add modify screen
+  - title
+  - details
+  - author
+- Add ability to create reviews
+- Add ability to edit reviews
+- Add preparation for multi-user support 
+To do tommorow:
+- Add the 1/10 basic rating system to modify page
+- Add the date of each post
+- Fetch book cover API
 
 
 TODO (in order):

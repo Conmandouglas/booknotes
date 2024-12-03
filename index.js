@@ -54,12 +54,26 @@ app.get('/add', async (req, res) => {
   res.render("modify.ejs", {
     title: "Write a Review"
   });
+});
+
+app.post('/add', async (req, res) => {
+  try {
+    const result = await db.query(
+      'INSERT INTO reviews (title, details, userid) VALUES ($1, $2, $3)',
+      [req.body.title, req.body.details, 1]
+      // TO DO: 1 updates based on what user is selected
+    );
+    res.redirect('/');
+  } catch (err) {
+    console.log(err);
+  }
 })
 
 app.get('/edit/:id', async (req, res) => {
   const reviewId = req.params.id;
 
   try {
+    // TO DO: only go through if post userid is equal to current userid
     const result = await db.query(
       'SELECT * FROM reviews WHERE id = $1', 
       [reviewId]);
@@ -80,6 +94,7 @@ app.post('/edit/:id', async (req, res) => {
   const { title, details } = req.body;
 
   try {
+    // TO DO: only go through if post userid is equal to current userid
     await db.query(
       'UPDATE reviews SET title = $1, details = $2 WHERE id = $3',
       [title, details, reviewId]
