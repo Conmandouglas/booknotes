@@ -27,7 +27,9 @@ Tuesday, Dec 3
 To do tommorow:
 - Add the 1/10 basic rating system to modify page
 - Add the date of each post
-- Fetch book cover API
+- Fetch book cover API and show photo to the left of the div
+  - use float temporarily before main styling
+- Add choose user route & page
 
 
 TODO (in order):
