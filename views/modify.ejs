@@ -1,0 +1,16 @@
+<%- include("./partials/header.ejs") %>
+
+<% if (locals.review) { %>
+  <form id="editForm" method="post" action="/edit/<%= review.id %>">
+    <input type="text" name="title" value="<%= review.title %>">
+    <input type="text" name="details" value="<%= review.details%>">
+    <button type="submit">Save</button>
+  </form>
+<% } else { %>
+  <form id="postForm" method="post" action="/add">
+    <input type="text" name="title" value="Title">
+    <input type="text" name="details" value="Details">
+    <button type="submit">Save</button>
+  </form>
+<% } %>
+<%- include("./partials/footer.ejs") %>
