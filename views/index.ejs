@@ -1,16 +1,18 @@
 <%- include("./partials/header.ejs") %>
 <a href="/add">Create Review</a> <br>
 <small>You are currently signed in as <strong>Connor</strong>. Not you? Click <a>here.</a></small>
-<% for(let item of list){%>
+<% for(let i = 0; i < list.length; i++){%>
 
-<div>
+<div style="margin-top: 50px;">
+  <img src="<%= list[i].thumb %>" style="float: left; height: 18.5vh; object-fit: cover; margin-right: 24px;">
   <div>
-    <h2><%= item.title %></h2>
-    <p>by <%= item.author %></p>
+    <h2 style="display: inline"><%= list[i].title %></h2>
+    <p style="display: inline">by <%= list[i].book_auth %></p>
   </div>
-  <p><%= item.details %></p>
-  <small><%= item.userid %></small>
-  <a href="/edit/<%= item.id %>">Edit</a>
+  <p><%= list.details %></p>
+  <p>Final Rating: <%= list[i].rating %></p>
+  <p>Review by <%= list[i].book_auth %> on <%= list[i].date %></p>
+  <a href="/edit/<%= list[i].id %>">Edit</a>
   <hr>
 </div>
 
