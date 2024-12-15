@@ -15,7 +15,8 @@ const db = new pg.Client({
 });
 
 
-const dbConnected = await db.connect().then(()=>true).catch(err => console.log(err))
+const dbConnected = await db.connect().then(()=>true).catch(err => console.log(err));
+
 
 app.listen(portRoute, () => {
   if(!dbConnected) {
@@ -29,6 +30,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 let reviews = [];
+let currentUserId = 1;
+
 async function checkReviews() {
   // selecting reviews id, title, detils and user name (referenced as author)
   // FROM reviews r is the table we are retrieving data from
@@ -41,7 +44,29 @@ async function checkReviews() {
      JOIN users u ON r.userid = u.id 
      ORDER BY r.id DESC;`
   );
-  return result.rows;
+
+  const reviewsWithUsernames = result.rows.map(async (review) => {
+    const username = await checkUser(review.userid);
+    return { ...review, username };
+  });
+
+  const reviewsWithUsernamesResolved = await Promise.all(reviewsWithUsernames);
+  return reviewsWithUsernamesResolved;
+}
+
+async function checkUser(inp) {
+  const result = await db.query(
+    `SELECT name FROM users WHERE id = $1`,
+    [inp]
+  );
+  if (result.rows.length === 0) {
+    console.error("User not found for ID:", inp);
+    console.log("sussy");
+    return null;
+  }
+  console.log(result);
+  const name = result.rows[0].name;
+  return name;
 }
 
 app.get('/', async (req, res) => {
@@ -52,6 +77,7 @@ app.get('/', async (req, res) => {
 // 
 
   const result = await checkReviews();
+  console.log(result.rows[0].username);
 
   for  (const review of result) {
     const title = review.title;
@@ -113,10 +139,11 @@ app.get('/', async (req, res) => {
 
   }
 
-  const reviewsList = await checkReviews();
+  const usersName = await checkUser(currentUserId);
+
   res.render("index.ejs", {
-    listUser: "Connor",
-    list: reviewsList,
+    listUser: usersName,
+    list: result,
     title: "Book Reviews",
   });
 });
@@ -134,9 +161,9 @@ app.post('/add', async (req, res) => {
     const month = date.getMonth() + 1;
     const day = date.getDate();
     let currentDate = `${month}/${day}/${year}`
-    const result = await db.query(
+    await db.query(
       'INSERT INTO reviews (title, details, userid, rating, date, book_auth) VALUES ($1, $2, $3, $4, $5, $6)',
-      [req.body.title, req.body.details, 1, req.body.rating, currentDate, book_auth]
+      [req.body.title, req.body.details, currentUserId, req.body.rating, currentDate, book_auth]
       // TO DO: 1 updates based on what user is selected
     );
 
@@ -150,16 +177,22 @@ app.get('/edit/:id', async (req, res) => {
   const reviewId = req.params.id;
 
   try {
-    // TO DO: only go through if post userid is equal to current userid
-    const result = await db.query(
-      'SELECT * FROM reviews WHERE id = $1', 
-      [reviewId]);
-    const review = result.rows[0];
-
-    res.render('modify.ejs', {
-      review: review,
-      title: 'Edit Review'
-    });
+    // if reviews.userid is equal to currentuser continue else say please only edit your own post
+    let result = await db.query(`SELECT userid FROM reviews WHERE id = $1`, 
+      [reviewId]
+    );
+    if (result === currentUserId) {
+      result = await db.query(
+        'SELECT * FROM reviews WHERE id = $1', 
+        [reviewId]);
+      const review = result.rows[0];
+  
+      res.render('modify.ejs', {
+        review: review,
+        title: 'Edit Review'
+      });
+    }
+    
   } catch (err) {
     console.error('Error fetching review:', err);
     res.status(500).send('Internal Server Error');
@@ -168,16 +201,16 @@ app.get('/edit/:id', async (req, res) => {
 
 app.post('/edit/:id', async (req, res) => {
   const reviewId = req.params.id;
-  const { title, details } = req.body;
+  const { title, details, book_auth, rating } = req.body;
 
   try {
     // TO DO: only go through if post userid is equal to current userid
     await db.query(
-      'UPDATE reviews SET title = $1, details = $2, book_auth = $3, rating = $4 WHERE id = $5',
+      'UPDATE reviews SET title = $1, details = $2, book_auth = $3, thumb = NULL, rating = $4 WHERE id = $5',
       [title, details, book_auth, rating, reviewId]
     );
     res.redirect('/');
-  } catch (error) {
+  } catch (err) {
     console.error('Error updating reviews:', err);
     res.status(500).send('Internal Server Error');
   }

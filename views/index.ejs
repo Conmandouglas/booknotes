@@ -1,6 +1,6 @@
 <%- include("./partials/header.ejs") %>
 <a href="/add">Create Review</a> <br>
-<small>You are currently signed in as <strong>Connor</strong>. Not you? Click <a>here.</a></small>
+<small>You are currently signed in as <strong><%= listUser %></strong>. Not you? Click <a>here.</a></small>
 <% for(let i = 0; i < list.length; i++){%>
 
 <div style="margin-top: 50px;">
@@ -11,7 +11,7 @@
   </div>
   <p><%= list.details %></p>
   <p>Final Rating: <%= list[i].rating %></p>
-  <p>Review by <%= list[i].book_auth %> on <%= list[i].date %></p>
+  <p>Review by <%= list[i].username %> on <%= list[i].date %></p>
   <a href="/edit/<%= list[i].id %>">Edit</a>
   <hr>
 </div>

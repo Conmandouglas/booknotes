@@ -4,7 +4,11 @@
   <form id="editForm" method="post" action="/edit/<%= review.id %>">
     <input type="text" name="title" value="<%= review.title %>" required>
     <input type="text" name="book_auth" placeholder="<%= review.book_auth %>">
+    <br>
     <input type="text" name="details" value="<%= review.details%>" required>
+    <br>
+    <label for="scaleInput">Rating:</label>
+    <br>
     <input type="number" name="rating" max="10" min="0" value="<%= review.rating %>" required><p style="display: inline; font-size: .75rem"> /10</p>
     <button type="submit">Save</button>
   </form>
