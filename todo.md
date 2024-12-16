@@ -63,9 +63,24 @@ Sunday, Dec 15
   - app.get("/") - sends in listUser, instead of a hardcoded name it now gets
   data from the newly created checkUser()
   - app.post("/add") - added currentUserId instead of a hardcoded "1"
+- Changed button on create review page from "Save" to "Post".
 - When rendering home page, the user's name is now sent in, instead of book author, for "Review by..." paragraph in EJS, for each review.
 To do next:
 - Fix errors in multi user system, it is not grabbing the username from the array that I made that edited the result. And the user not found for id. Make it so it grabs the name of user. This is the main thing. After this, I am golden to add more user-related features.
+- Make a stack overflow question, search stack overflow, learn how to look things up on google and don't use alternative methods.
+- re-organize code, figure out what each line does
+
+Monday, Dec 16
+To get done:
+- Comment what each line of code is doing, add console logs, error handling
+- Attempt to add the "Review by author" to each of the reviews
+Accomplished:
+- Fix editing someone elses message error handling, and redirect
+- Add a lot of comments throughout code
+- Make code more readable through more variables
+- Delete unneccesary code
+To do next:
+- 
 
 
 
@@ -84,6 +99,7 @@ TODO (in order):
   to do bootstrap
 - Add a light/dark toggle in a corner
 - Find a way to add an arrow that pops up to scroll back up to the top
+- Only set thumbnail to null when editing if the title has been changed
 - Add some sort of basic auth system, username and password for each user and creation
   - semi secure
 - Pat myself on the back for accomplishing this task of a project, my FINAL

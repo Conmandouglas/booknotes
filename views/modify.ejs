@@ -1,4 +1,5 @@
 <%- include("./partials/header.ejs") %>
+<%- include("./partials/error.ejs") %>
 
 <% if (locals.review) { %>
   <form id="editForm" method="post" action="/edit/<%= review.id %>">
@@ -22,7 +23,7 @@
     <label for="scaleInput">Rating:</label>
     <br>
     <input type="number" name="rating" max="10" min="0" value="10"><p style="display: inline; font-size: .75rem"> /10</p>
-    <button type="submit">Save</button>
+    <button type="submit">Post</button>
   </form>
 <% } %>
 <%- include("./partials/footer.ejs") %>
